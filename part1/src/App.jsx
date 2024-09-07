@@ -31,19 +31,25 @@ const Header = (props)=>{
   )
 }
 
-const Content = (props)=>{
-  const contentArray = [];
-  for(let i=0; i<props.parts.length; i++){
-    contentArray.push(
-    <p>{props.parts[i]} {props.exercises[i]}</p>
-    )
-  }
+const Content = (props)=> {
+  return (
+    <div>
+      <Part part={props.parts[0]} exercise={props.exercises[0]}/>
+      <Part part={props.parts[1]} exercise={props.exercises[1]}/>
+      <Part part={props.parts[2]} exercise={props.exercises[2]}/>
+      
+    </div>
+  )
+}
+
+const Part = (props)=>{
   return(
     <>
-      {contentArray}
+      <p>{props.part} {props.exercise}</p>
     </>
   )
 }
+
 
 const Total = (props)=>{
   let total = 0
