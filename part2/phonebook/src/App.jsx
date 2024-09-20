@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import personService from './services/persons'
 import Filter from './components/Filter'
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
+
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -11,10 +13,9 @@ const App = () => {
 
   // initialize persons with data fetch from local server
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
+      personService.getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
       });
   }, []);
   
@@ -37,7 +38,13 @@ const App = () => {
       
     } else {
       const newPerson = { name: newName, number: newNumber, id: persons.length+1 };
-      setPersons(persons.concat(newPerson));
+      // send newPerson to server
+      personService
+      .create(newPerson)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson));
+      } );
+      
       setNewName('');
       setNewNumber('');
     }
