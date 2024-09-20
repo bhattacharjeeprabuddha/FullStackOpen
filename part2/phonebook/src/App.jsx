@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import personService from './services/persons'
 import Filter from './components/Filter'
 import Persons from './components/Persons'
@@ -10,14 +9,18 @@ const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
-
-  // initialize persons with data fetch from local server
-  useEffect(() => {
-      personService.getAll()
+  
+  // get all data from server 
+  const getAll = () => {
+    personService.getAll()
       .then(initialPersons => {
         setPersons(initialPersons)
       });
-  }, []);
+  }
+  
+
+  // initialize persons with data fetch from local server
+  useEffect(getAll, []);
   
   // event handler : from input name
   const onChangeName = (event) => {
@@ -37,7 +40,7 @@ const App = () => {
       alert(`${newName} is already added to phonebook`);
       
     } else {
-      const newPerson = { name: newName, number: newNumber, id: persons.length+1 };
+      const newPerson = { name: newName, number: newNumber };
       // send newPerson to server
       personService
       .create(newPerson)
@@ -57,10 +60,18 @@ const App = () => {
       p.name.toLocaleLowerCase().includes(name));
     
     setPersons(filteredPersons);
-    
+  }
+
+  // event handler : delete button for each person
+  const erase = (id, name) => {
+    personService
+    .erase(id, name)
+    .then(getAll);
     
 
   }
+  
+
 
   return (
     <div>
@@ -76,7 +87,7 @@ const App = () => {
       />
       
       <h2>Numbers</h2>
-      <Persons persons={persons} />
+      <Persons persons={persons} erase={erase} />
       
     </div>
   )

@@ -23,6 +23,17 @@ const create = (newPerson) => {
 }
 
 
+const erase = (id, name, setPersons) => {
+    window.confirm(`Delete ${name} ?`);
+    return(
+        axios
+        .delete(`${baseUrl}/${id}`)
+        
+    )
+        
+    
+}
 
 
-export default{ getAll,create }
+
+export default{ getAll,create, erase }
