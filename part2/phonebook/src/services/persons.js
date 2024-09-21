@@ -30,10 +30,25 @@ const erase = (id, name, setPersons) => {
         .delete(`${baseUrl}/${id}`)
         
     )
+}
+
+// don't know the id beforehand
+const update = ({name, number}) => { 
+    return(
+        axios
+            .get(`${baseUrl}?name=${name}`)
+            .then(response => {
+                const id = response.data[0].id;
+                return(
+                    axios
+                        .put(`${baseUrl}/${id}`, {name, number})
+                        
+                )
+            })
+        )
         
-    
 }
 
 
 
-export default{ getAll,create, erase }
+export default{ getAll,create, erase, update }

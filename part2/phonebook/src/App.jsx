@@ -10,9 +10,10 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   
-  // get all data from server 
+  // get all data from server (called for rerendering the app whenever needed)
   const getAll = () => {
-    personService.getAll()
+    personService
+      .getAll()
       .then(initialPersons => {
         setPersons(initialPersons)
       });
@@ -32,21 +33,28 @@ const App = () => {
     setNewNumber(event.target.value);
   }
 
-  // event handler : from submit
+  // event handler : form submit
   const addNewPerson = (event) => {
     event.preventDefault();
     
+    const newPerson = { name: newName, number: newNumber };
+      
     if (persons.map(p => p.name).includes(newName)){
-      alert(`${newName} is already added to phonebook`);
+      alert(`${newName} is already added to phonebook, replace the old number with a new one ?`);
+      personService
+        .update(newPerson)
+        .then(getAll)
+        
+
+      
       
     } else {
-      const newPerson = { name: newName, number: newNumber };
       // send newPerson to server
       personService
-      .create(newPerson)
-      .then(returnedPerson => {
+        .create(newPerson)
+        .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson));
-      } );
+      });
       
       setNewName('');
       setNewNumber('');
@@ -65,8 +73,8 @@ const App = () => {
   // event handler : delete button for each person
   const erase = (id, name) => {
     personService
-    .erase(id, name)
-    .then(getAll);
+      .erase(id, name)
+      .then(getAll);
     
 
   }
