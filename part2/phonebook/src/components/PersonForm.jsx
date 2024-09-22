@@ -17,7 +17,7 @@
                 </div>
             
                 <div>
-                    <button type="submit">add</button>
+                    <button type="submit" style={{color:'green'}}>add</button>
                 </div>
       
             </form>

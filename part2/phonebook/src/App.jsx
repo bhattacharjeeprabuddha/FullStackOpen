@@ -3,12 +3,20 @@ import personService from './services/persons'
 import Filter from './components/Filter'
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
+import Notification from './components/Notification'
 
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
+  const [notification, setNotification] = useState('');
+
+
+  // set notification to null
+  const setNotificationToNull = () => {
+    setNotification('');
+  }
   
   // get all data from server (called for rerendering the app whenever needed)
   const getAll = () => {
@@ -36,14 +44,27 @@ const App = () => {
   // event handler : form submit
   const addNewPerson = (event) => {
     event.preventDefault();
-    
     const newPerson = { name: newName, number: newNumber };
-      
+    
+    // change number if already exists
     if (persons.map(p => p.name).includes(newName)){
       alert(`${newName} is already added to phonebook, replace the old number with a new one ?`);
       personService
         .update(newPerson)
-        .then(getAll)
+        .then(()=>{
+          getAll();
+          setNotification(`${newName} successfully updated to new number`);
+          setTimeout(setNotificationToNull, 3000);
+          }
+        )
+        .catch((error)=>{
+          setNotification(`Information of ${newName} already removed from server`);
+          getAll();
+          
+        })
+        
+      
+      
         
 
       
@@ -54,7 +75,13 @@ const App = () => {
         .create(newPerson)
         .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson));
+        setNotification(`${newName} successfully added to phonebook`);
+        setTimeout(setNotificationToNull, 3000);
+      
+        
       });
+
+      
       
       setNewName('');
       setNewNumber('');
@@ -74,7 +101,18 @@ const App = () => {
   const erase = (id, name) => {
     personService
       .erase(id, name)
-      .then(getAll);
+      .then(()=>{
+        getAll();
+        setNotification(
+          
+            `${name} successfully removed from phonebook`
+          
+        );
+        setTimeout(setNotificationToNull, 3000);
+      })
+      
+    
+    
     
 
   }
@@ -83,7 +121,8 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <Notification message={notification} />
+      <h1>Phonebook</h1>
       
       <Filter filterFunction={filterByName} />
 
@@ -94,7 +133,7 @@ const App = () => {
         newNumber = {newNumber}
       />
       
-      <h2>Numbers</h2>
+      <h1>Numbers</h1>
       <Persons persons={persons} erase={erase} />
       
     </div>
