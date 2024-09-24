@@ -55,12 +55,29 @@ app.delete('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
     const person = request.body;
-    const id = Math.random() * 1000;
-    person.id = `${Math.round(id)}`;
+    const name = person.name;
+    const number = person.number;
+
+    if (!name) {
+        return response.status(400).json({error: 'name is missing'})
+    }
+
+    if (!number) {
+        return response.status(400).json({error: 'number is missing'})
+    }
     
-    persons = persons.concat(person);
-    response.end();
+
+    if (persons.map(p => p.name).includes(name)){
+        return response.status(409).json({ error: 'name must be unique' });
+    } 
+
     
+        const id = Math.round(Math.random() * 1000);
+        person.id = `${id}`;
+        persons = persons.concat(person);
+        response.status(200).json(person);
+    
+
 })
 
 
