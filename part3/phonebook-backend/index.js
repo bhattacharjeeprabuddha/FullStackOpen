@@ -2,9 +2,18 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 
+// custom morgan token
+morgan.token('body', (request) => {
+    if (request.method === 'POST') {
+        return JSON.stringify(request.body);
+    }
+});
+
 // middlewares 
 app.use(express.json());
-app.use(morgan('dev'));
+// app.use(morgan('dev'));
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
+
 
 let persons = [
     { 
@@ -70,26 +79,24 @@ app.post('/api/persons', (request, response) => {
         return response.status(400).json({error: 'number is missing'})
     }
     
-
-    if (persons.map(p => p.name).includes(name)){
+    if (persons 
+            .map(p => p.name.toLocaleLowerCase())
+            .includes(name.toLocaleLowerCase()))
+            {
         return response.status(409).json({ error: 'name must be unique' });
     } 
 
     
-        const id = Math.round(Math.random() * 1000);
-        person.id = `${id}`;
-        persons = persons.concat(person);
-        response.status(200).json(person);
+    const id = Math.round(Math.random() * 1000);
+    person.id = `${id}`;
+    persons = persons.concat(person);
+    response.status(200).json(person);
     
 
 })
 
 
-
-
-
-
-
-
 const PORT = 3001;
-app.listen(PORT);
+app.listen(PORT, () => {
+    console.log(`server running on port ${PORT}`);
+});
