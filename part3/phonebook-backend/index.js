@@ -1,10 +1,10 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 app.use(express.static('dist'));
 app.use(express.json());
+const Person = require("./models/person");
 
-const cors = require('cors');
-app.use(cors());
 
 const morgan = require('morgan');
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
@@ -19,38 +19,20 @@ morgan.token('body', (request) => {
 });
 
 
-let persons = [
-    { 
-      "id": "1",
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": "2",
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": "3",
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": "4",
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-]
-
 app.get('/api/persons', (request, response) => {
-    response.json(persons);
+    Person.find({}).then(p => {
+        response.json(p);
+    })
 })
 
 app.get('/info', (request, response) => {
-    response.send(
-        `<p>Phonebook has info for ${persons.length} people </p>
-        <p>${Date()}</p>`
-    );
+    Person.countDocuments().then(count => {
+        response.send(
+            `<p>Phonebook has info for ${count} people </p>
+            <p>${Date()}</p>`
+        );
+    });
+    
 })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -71,9 +53,8 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 app.post('/api/persons', (request, response) => {
-    const person = request.body;
-    const name = person.name;
-    const number = person.number;
+    const name = request.body.name;
+    const number = request.body.number;
 
     if (!name) {
         return response.status(400).json({error: 'name is missing'})
@@ -83,19 +64,10 @@ app.post('/api/persons', (request, response) => {
         return response.status(400).json({error: 'number is missing'})
     }
     
-    if (persons 
-            .map(p => p.name.toLocaleLowerCase())
-            .includes(name.toLocaleLowerCase()))
-            {
-        return response.status(409).json({ error: 'name must be unique' });
-    } 
-
-    
-    const id = Math.round(Math.random() * 1000);
-    person.id = `${id}`;
-    persons = persons.concat(person);
-    response.status(200).json(person);
-    
+    const person = new Person({name, number});
+    person.save().then(savedPerson => {
+        response.json(savedPerson);
+    });
 
 })
 
@@ -104,3 +76,5 @@ const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 });
+
+
