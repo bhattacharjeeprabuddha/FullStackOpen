@@ -1,54 +1,28 @@
 import axios from "axios";
 
-
-const baseUrl = '/api/persons'
+const baseUrl = "/api/persons";
 
 // fetch all person resources from server
 const getAll = () => {
-    return(
-        axios
-        .get(baseUrl)
-        .then(response => response.data)
-    );
+  return axios.get(baseUrl).then((response) => response.data);
+};
 
-}
-
-
+// create new person
 const create = (newPerson) => {
-    return(
-        axios
-        .post(baseUrl, newPerson)
-        .then(response => response.data)
-    );
-}
+  return axios.post(baseUrl, newPerson).then((response) => response.data);
+};
 
+// delete person
+const erase = (id, name) => {
+  window.confirm(`Delete ${name} ?`);
+  return axios.delete(`${baseUrl}/${id}`);
+};
 
-const erase = (id, name, setPersons) => {
-    window.confirm(`Delete ${name} ?`);
-    return(
-        axios
-        .delete(`${baseUrl}/${id}`)
-        
-    )
-}
+// update existinf person
+const update = (id, newPerson) => {
+  return axios.put(`${baseUrl}/${id}`, newPerson).then((response) => {
+    response.data;
+  });
+};
 
-// don't know the id beforehand
-const update = ({name, number}) => { 
-    return(
-        axios
-            .get(`${baseUrl}?name=${name}`)
-            .then(response => {
-                const id = response.data[0].id;
-                return(
-                    axios
-                        .put(`${baseUrl}/${id}`, {name, number})
-                        
-                )
-            })
-        )
-        
-}
-
-
-
-export default{ getAll,create, erase, update }
+export default { getAll, create, erase, update };
