@@ -2,28 +2,46 @@ import { useState, useEffect } from 'react'
 import CountryForm from './components/countryForm'
 import countriesService from './services/countries'
 import DisplayCountries from './components/DisplayCountries';
-import axios from 'axios'
+
 // import './App.css'
 
 function App() {
-  const [country, setCountry] = useState('');
-  const [countries, setCountries] = useState([]);
+  const [countryNameInput, setCountry] = useState('');
+  // const [countries, setCountries] = useState([]);
+  const [singleCountry, setSingleCountry] = useState({});
+  const [countriesNames, setCountriesNames] = useState([]);
+  const [filteredCountryNames, setFilteredCountryNames] = useState([]);
 
 
-  axios
-      .get('https://studies.cs.helsinki.fi/restcountries/api/name/')
-      .then(response => {
-          setCountries(response.data)
-      });
-    
+  // get all countries names in first render
+  useEffect(() => {
+    countriesService
+      .getAllCountries()
+      .then(data => {
+        setCountriesNames(data.map(c => c.name.common))
+      })
+  }, []);
+
+
+  // filter names on input change
+  useEffect(() => {
+    const matches = countriesNames
+      .filter(name => name.toLowerCase().includes(countryNameInput.toLowerCase()));
   
-
+    setFilteredCountryNames(matches);
+  
+    if (matches.length === 1) {
+      countriesService.getCountryByName(matches[0]).then(data => setSingleCountry(data));
+    }
+  }, [countryNameInput]); 
+  
+  
+  
 
   return (
     <>
-      <ul>{countries}</ul>
-      <CountryForm country={country} setCountry={setCountry}/>
-      <DisplayCountries countries={countries}/>
+      <CountryForm country={countryNameInput} setCountry={setCountry}/>
+      <DisplayCountries filteredCountryNames={filteredCountryNames} singleCountry={singleCountry}/>
     </>
     
   )

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 const CountryForm = ({country, setCountry}) => {
     return (
         <form >
@@ -10,7 +11,7 @@ const CountryForm = ({country, setCountry}) => {
                     type="text" 
                     name="country"
                     value={country}
-                    onChange={event => setCountry(event.target.value)}
+                    onChange={(event) => setCountry(event.target.value)}
                 />
 
             </label>
