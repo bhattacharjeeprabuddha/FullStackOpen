@@ -1,27 +1,26 @@
 /* eslint-disable react/prop-types */
 
+import { useEffect, useState } from "react"
+
+import DisplaySingleCountry from "./DisplaySingleCountry"
+import countriesService from '../services/countries'
+
 const DisplayCountries = ({filteredCountryNames, singleCountry}) => {
 
+        const [showCountry, setShowCountry] = useState({});
+
+        // if single country object is non-empty
         if(Object.keys(singleCountry).length >= 1) {
-            console.log(singleCountry)
-            return (
-                <>
-                    <div>Capital {singleCountry.capital[0]}</div>
-                    <div>Area {singleCountry.area}</div>
-                    <ul>
-                        {Object.values(singleCountry.languages).map((l, i) => 
-                                <li key={i}>
-                                    {l}
-                                </li>
-                            )}
-                    </ul>
-                    <img src={singleCountry.flags.png} alt={singleCountry.flags.alt} />
-                </>    
-            )
+            // console.log(singleCountry)
+            return (<DisplaySingleCountry singleCountry={singleCountry}/>)
         }
     
         if(filteredCountryNames.length > 10) {
             return <p>Too many matches, specify another filter</p>
+        }
+
+        if(Object.keys(showCountry).length >= 1) {
+            return <DisplaySingleCountry singleCountry={showCountry} />
         }
 
         return (
@@ -30,10 +29,23 @@ const DisplayCountries = ({filteredCountryNames, singleCountry}) => {
             <ul>
                 { 
                     filteredCountryNames.map((country, i) => {
-                        return <li key={i}>{country}</li>
+                        return <li key={i}>
+                                    {country} 
+                                    
+                                    <button onClick={() => {                                        
+                                        countriesService
+                                            .getCountryByName(country)
+                                            .then(data => setShowCountry(data));
+                                    }}> Show
+                                    </button>
+                                    
+                                    
+                                </li>
                     })
                 }
             </ul>
+            
+        
             </>
         )
     }

@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
+
 import CountryForm from './components/countryForm'
-import countriesService from './services/countries'
 import DisplayCountries from './components/DisplayCountries';
+import countriesService from './services/countries'
 
 // import './App.css'
 
