@@ -11,7 +11,6 @@ const DisplayCountries = ({filteredCountryNames, singleCountry}) => {
 
         // if single country object is non-empty
         if(Object.keys(singleCountry).length >= 1) {
-            // console.log(singleCountry)
             return (<DisplaySingleCountry singleCountry={singleCountry}/>)
         }
     

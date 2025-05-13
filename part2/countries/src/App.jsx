@@ -4,11 +4,8 @@ import CountryForm from './components/countryForm'
 import DisplayCountries from './components/DisplayCountries';
 import countriesService from './services/countries'
 
-// import './App.css'
-
 function App() {
   const [countryNameInput, setCountry] = useState('');
-  // const [countries, setCountries] = useState([]);
   const [singleCountry, setSingleCountry] = useState({});
   const [countriesNames, setCountriesNames] = useState([]);
   const [filteredCountryNames, setFilteredCountryNames] = useState([]);
@@ -42,7 +39,9 @@ function App() {
   return (
     <>
       <CountryForm country={countryNameInput} setCountry={setCountry}/>
+      <p></p>
       <DisplayCountries filteredCountryNames={filteredCountryNames} singleCountry={singleCountry}/>
+      <p></p>
     </>
     
   )
