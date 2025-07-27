@@ -12,21 +12,23 @@ const totalLikes = (blogs) => {
 }
 
 
-
-
-
-
-
-
-
-
-
-
+const favoriteBlog = (blogs) => {
+    let highestLike = 0;
+    let favBlog;
+    for (blog of blogs) {
+        if (blog.likes > highestLike) {
+            highestLike = blog.likes;
+            favBlog = blog;
+        }
+    }
+    return favBlog;
+}
 
 
 
 
 module.exports = {
     dummy,
-    totalLikes
+    totalLikes,
+    favoriteBlog
 }
