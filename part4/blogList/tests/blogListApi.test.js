@@ -86,7 +86,22 @@ describe('BlogList App API test', () => {
 
         const responseBlog = response.body;
         assert.strictEqual(responseBlog.likes, 0);
-    })
+    });
+
+    test('Create new blog object without title or url result in api response 400 bad request', async () => {
+        const newBlogWithoutTitle = {
+            author: 'test author',
+            url: 'test url'
+        }
+
+        const newBlogWithoutUrl = {
+            title: 'test title',
+            author: 'test author',
+        }
+
+        await api.post('/api/blogs').send(newBlogWithoutTitle).expect(400);
+        await api.post('/api/blogs').send(newBlogWithoutUrl).expect(400);
+    });
 });
 
 after(async () => {
