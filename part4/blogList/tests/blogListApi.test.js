@@ -70,6 +70,22 @@ describe('BlogList App API test', () => {
         assert.strictEqual(responseBlog.author, 'test author');
         assert.strictEqual(responseBlog.url, 'test url');
         assert.strictEqual(responseBlog.likes, 1);
+    });
+
+    test('Create new blog object without likes property makes likes default value 0', async () => {
+        const newBlog = {
+            title: 'Blog without title',
+            author: 'Author NoTitle',
+            url: 'url/noTitle'
+        };
+        const response = await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/);
+
+        const responseBlog = response.body;
+        assert.strictEqual(responseBlog.likes, 0);
     })
 });
 
