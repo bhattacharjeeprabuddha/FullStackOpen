@@ -102,6 +102,29 @@ describe('BlogList App API test', () => {
         await api.post('/api/blogs').send(newBlogWithoutTitle).expect(400);
         await api.post('/api/blogs').send(newBlogWithoutUrl).expect(400);
     });
+
+    test('Delete a blog by its id working successfully', async () => {
+        const blogsInDb = await test_helper.blogsInDb();
+        const id = blogsInDb[0].id;
+
+        await api
+            .delete(`/api/blogs/${id}`)
+            .expect(204);
+
+        const deletedBlog = await Blog.findById(id);
+        assert.strictEqual(deletedBlog, null);
+    });
+
+    test('Update a blog by its id working successfully', async () => {
+        const blogsInDb = await test_helper.blogsInDb();
+        const blogToUpdate = blogsInDb[0];
+
+        const response = await api
+            .put(`/api/blogs/${blogToUpdate.id}`)
+            .send({ likes: blogToUpdate.likes + 1 });
+
+        assert.strictEqual(response.body.likes, blogToUpdate.likes + 1);
+    });
 });
 
 after(async () => {
