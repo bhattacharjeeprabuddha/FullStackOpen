@@ -5,9 +5,7 @@ const superTest = require('supertest');
 const app = require('../app');
 const Blog = require('../model/blog');
 const { blogsTestData } = require('../utils/list_helper');
-const blog = require('../model/blog');
-const { title } = require('node:process');
-const test_helper = require('./test_helper');
+const test_helper = require('../utils/test_helper');
 
 const api = superTest(app);
 
@@ -121,12 +119,21 @@ describe('BlogList App API test', () => {
 
         const response = await api
             .put(`/api/blogs/${blogToUpdate.id}`)
-            .send({ likes: blogToUpdate.likes + 1 });
+            .send({ likes: blogToUpdate.likes + 1 })
+            .expect(200)
+            .expect('Content-Type', /application\/json/);
 
         assert.strictEqual(response.body.likes, blogToUpdate.likes + 1);
+
+        // Verify the blog was actually updated in the database
+        const updatedBlogInDb = await Blog.findById(blogToUpdate.id);
+        assert.strictEqual(updatedBlogInDb.likes, blogToUpdate.likes + 1);
     });
+
+
 });
 
 after(async () => {
     await mongoose.connection.close();
+
 });
