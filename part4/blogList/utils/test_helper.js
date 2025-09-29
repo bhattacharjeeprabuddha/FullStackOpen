@@ -1,4 +1,5 @@
 const Blog = require('../model/blog');
+const User = require('../model/user');
 
 const blogsInDb = async () => {
     const blogs = await Blog.find({});

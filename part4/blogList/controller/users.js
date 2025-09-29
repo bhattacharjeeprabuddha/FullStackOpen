@@ -16,8 +16,6 @@ usersRouter.post('/', async (request, response) => {
         return;
     }
 
-
-
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);
 
@@ -34,9 +32,12 @@ usersRouter.post('/', async (request, response) => {
         response.status(400).json({ error: error.message });
     }
 
-
 });
 
+usersRouter.get('/', async (request, response) => {
+    const users = await User.find({}).populate('blogs', { user: 0 });
+    response.json(users);
+});
 
 
 

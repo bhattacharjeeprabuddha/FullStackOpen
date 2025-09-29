@@ -1,16 +1,23 @@
 // import: router, model
 const blogsRouter = require("express").Router();
 const Blog = require("../model/blog");
+const User = require("../model/user");
+const usersInDb = require("../utils/test_helper").usersInDb;
 
 // expose endpoint GET
 blogsRouter.get('/', async (request, response) => {
-    const blogs = await Blog.find({});
+    const blogs = await Blog.find({}).populate('user', { username: 1, name: 1, id: 1 });
     response.json(blogs);
 });
 
 // expose endpoint POST
 blogsRouter.post('/', async (request, response) => {
-    const blog = new Blog(request.body);
+    const { title, author, url, likes } = request.body;
+
+    const allUsers = await usersInDb();
+    const blog = new Blog({ title, author, url, likes, user: allUsers[0].id });
+
+
     if (!blog.likes) {
         blog.likes = 0;
     }
@@ -20,6 +27,9 @@ blogsRouter.post('/', async (request, response) => {
     }
 
     const result = await blog.save();
+
+    await User.findByIdAndUpdate(allUsers[0].id, { $push: { blogs: result.id } });
+
     response.status(201).json(result);
 });
 
