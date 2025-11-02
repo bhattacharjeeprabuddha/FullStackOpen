@@ -9,10 +9,7 @@ const userExtractor = async (req, res, next) => {
         return res.status(401).json({ error: 'token invalid' });
     }
     req.user = await User.findById(decodedToken.id);
-    if (!req.user) {
-        return res.status(401).json({ error: 'User not found' });
-    }
     next();
 };
 
-module.exports = { userExtractor };
+module.exports = userExtractor;

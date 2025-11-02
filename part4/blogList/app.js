@@ -7,7 +7,9 @@ const logger = require('./utils/logger');
 const blogsRouter = require('./controller/blogs');
 const usersRouter = require('./controller/users');
 const loginRouter = require('./controller/login');
-const { tokenExtractor } = require('./middleware/tokenExtractor');
+const tokenExtractor = require('./middleware/tokenExtractor');
+const userExtractor = require('./middleware/userExtractor');
+
 
 
 const app = express();
