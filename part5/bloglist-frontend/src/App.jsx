@@ -5,6 +5,7 @@ import LoginForm from "./components/LoginForm";
 import Logout from "./components/Logut";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
+import CreateBlogForm from "./components/CreateBlogForm";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -12,6 +13,11 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
   const [user, setUser] = useState(null);
+
+  // new blog
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [url, setUrl] = useState("");
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -44,8 +50,12 @@ const App = () => {
     }
   };
 
+  const handleLogout = () => {
+    window.localStorage.removeItem("loggedInUser");
+  };
+
   return (
-    <div>
+    <>
       {!user && (
         <LoginForm
           username={username}
@@ -60,9 +70,21 @@ const App = () => {
 
       <h2>blogs</h2>
       {user && <p>{`${user.username} logged in`}</p>}
-      {user && <Logout user={user} />}
+      {user && <Logout user={user} handleLogout={handleLogout} />}
       {user && blogs.map((blog) => <Blog key={blog.id} blog={blog} />)}
-    </div>
+
+      {user && (
+        <CreateBlogForm
+          title={title}
+          setTitle={setTitle}
+          author={author}
+          setAuthor={setAuthor}
+          url={url}
+          setUrl={setUrl}
+          blogService={blogService}
+        />
+      )}
+    </>
   );
 };
 

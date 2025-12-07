@@ -1,8 +1,4 @@
-const handleLogout = () => {
-  window.localStorage.removeItem("loggedInUser");
-};
-
-const Logout = ({ user }) => {
+const Logout = ({ user, handleLogout }) => {
   return (
     <div>
       <p>
