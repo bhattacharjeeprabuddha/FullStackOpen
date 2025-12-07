@@ -11,8 +11,9 @@ const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
   const [user, setUser] = useState(null);
+  const [notification, setNotification] = useState("");
 
   // new blog
   const [title, setTitle] = useState("");
@@ -56,6 +57,20 @@ const App = () => {
 
   return (
     <>
+      {errorMessage && (
+        <div
+          style={{
+            color: "red",
+            backgroundColor: "lightgrey",
+            padding: "10px",
+            borderRadius: "5px",
+            border: "2px solid red",
+          }}
+        >
+          {errorMessage}
+        </div>
+      )}
+
       {!user && (
         <LoginForm
           username={username}
@@ -66,9 +81,20 @@ const App = () => {
         />
       )}
 
-      <div>{errorMessage}</div>
-
-      <h2>blogs</h2>
+      {user && <h2>blogs</h2>}
+      {notification && (
+        <div
+          style={{
+            color: "green",
+            backgroundColor: "lightgrey",
+            padding: "10px",
+            borderRadius: "5px",
+            border: "2px solid green",
+          }}
+        >
+          {notification}
+        </div>
+      )}
       {user && <p>{`${user.username} logged in`}</p>}
       {user && <Logout user={user} handleLogout={handleLogout} />}
       {user && blogs.map((blog) => <Blog key={blog.id} blog={blog} />)}
@@ -82,6 +108,9 @@ const App = () => {
           url={url}
           setUrl={setUrl}
           blogService={blogService}
+          setNotification={setNotification}
+          blogs={blogs}
+          setBlogs={setBlogs}
         />
       )}
     </>

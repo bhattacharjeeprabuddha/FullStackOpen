@@ -6,11 +6,22 @@ const CreateBlogForm = ({
   url,
   setUrl,
   blogService,
+  setNotification,
+  blogs,
+  setBlogs,
 }) => {
   return (
     <>
       <h2>Create New</h2>
-      <form onSubmit={() => blogService.create({ title, author, url })}>
+      <form
+        onSubmit={async (event) => {
+          event.preventDefault();
+          await blogService.create({ title, author, url });
+          setBlogs(blogs.concat({ title, author, url }));
+          setNotification(`a new blog ${title} by ${author} added`);
+          setTimeout(() => setNotification(""), 5000);
+        }}
+      >
         <div>
           <label htmlFor="title">title: </label>
           <input
