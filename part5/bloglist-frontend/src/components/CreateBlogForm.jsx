@@ -9,6 +9,8 @@ const CreateBlogForm = ({
   setNotification,
   blogs,
   setBlogs,
+  visible,
+  setVisible,
 }) => {
   return (
     <>
@@ -20,6 +22,7 @@ const CreateBlogForm = ({
           setBlogs(blogs.concat({ title, author, url }));
           setNotification(`a new blog ${title} by ${author} added`);
           setTimeout(() => setNotification(""), 5000);
+          setVisible(!visible);
         }}
       >
         <div>
@@ -46,7 +49,7 @@ const CreateBlogForm = ({
             onChange={({ target }) => setUrl(target.value)}
           />
         </div>
-        <button type="submit">Create</button>
+        <button type="submit">create</button>
       </form>
     </>
   );

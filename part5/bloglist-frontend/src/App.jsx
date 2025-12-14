@@ -6,6 +6,7 @@ import Logout from "./components/Logut";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import CreateBlogForm from "./components/CreateBlogForm";
+import Toggleable from "../src/components/Toggleable";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -19,6 +20,9 @@ const App = () => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
+
+  // toggleable state
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -100,18 +104,26 @@ const App = () => {
       {user && blogs.map((blog) => <Blog key={blog.id} blog={blog} />)}
 
       {user && (
-        <CreateBlogForm
-          title={title}
-          setTitle={setTitle}
-          author={author}
-          setAuthor={setAuthor}
-          url={url}
-          setUrl={setUrl}
-          blogService={blogService}
-          setNotification={setNotification}
-          blogs={blogs}
-          setBlogs={setBlogs}
-        />
+        <Toggleable
+          buttonLabel="create"
+          visible={visible}
+          setVisible={setVisible}
+        >
+          <CreateBlogForm
+            title={title}
+            setTitle={setTitle}
+            author={author}
+            setAuthor={setAuthor}
+            url={url}
+            setUrl={setUrl}
+            blogService={blogService}
+            setNotification={setNotification}
+            blogs={blogs}
+            setBlogs={setBlogs}
+            visible={visible}
+            setVisible={setVisible}
+          />
+        </Toggleable>
       )}
     </>
   );
