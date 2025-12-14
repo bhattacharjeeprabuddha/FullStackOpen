@@ -57,6 +57,7 @@ const App = () => {
 
   const handleLogout = () => {
     window.localStorage.removeItem("loggedInUser");
+    window.location.reload();
   };
 
   return (
