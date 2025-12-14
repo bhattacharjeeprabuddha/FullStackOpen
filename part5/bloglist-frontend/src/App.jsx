@@ -17,9 +17,9 @@ const App = () => {
   const [notification, setNotification] = useState("");
 
   // new blog
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
+  // const [title, setTitle] = useState("");
+  // const [author, setAuthor] = useState("");
+  // const [url, setUrl] = useState("");
 
   // toggleable state
   const [visible, setVisible] = useState(false);
@@ -110,12 +110,6 @@ const App = () => {
           setVisible={setVisible}
         >
           <CreateBlogForm
-            title={title}
-            setTitle={setTitle}
-            author={author}
-            setAuthor={setAuthor}
-            url={url}
-            setUrl={setUrl}
             blogService={blogService}
             setNotification={setNotification}
             blogs={blogs}

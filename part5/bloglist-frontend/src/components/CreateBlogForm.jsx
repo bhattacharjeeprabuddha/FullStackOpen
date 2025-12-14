@@ -1,10 +1,6 @@
+import { useState } from "react";
+
 const CreateBlogForm = ({
-  title,
-  setTitle,
-  author,
-  setAuthor,
-  url,
-  setUrl,
   blogService,
   setNotification,
   blogs,
@@ -12,6 +8,10 @@ const CreateBlogForm = ({
   visible,
   setVisible,
 }) => {
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [url, setUrl] = useState("");
+
   return (
     <>
       <h2>Create New</h2>
